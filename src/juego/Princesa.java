@@ -42,5 +42,26 @@ public void saltar() {
 	}
 	
 }
+//FISICAS
+public void actualizarFisica() {
+	if (!this.enSuelo) {
+		this.velY += GRAVEDAD;
+	}
+	this.y += this.velY;
+} 
+
+//LLama a la funcion cuando los pies de la princesa tocan el suelo de una isla
+public void aterrizaEn(double pisoY) {
+	this.y =pisoY - ALTO/2.0;
+	this.velY = 0;
+	this.enSuelo = true;
+}
+
+//LLama a la funcion cuando la princesa no esta sobre ninguna isla
+public void despegar() {
+	this.enSuelo = false;
+}
+
+
 
 }

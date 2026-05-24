@@ -12,4 +12,35 @@ private int vidas;
 private boolean enSuelo; //true cuando esta parada sobre algo
 private Image imagen;
 
+private static final double VELOCIDAD = 5;
+private static final double GRAVEDAD= 0.5;
+private static final double FUERZA_SALTO= -12;
+public static final int ANCHO= 40;
+public static final int ALTO= 60;
+
+public Princesa(double x, double y) {
+	this.x = x;
+	this.y = y;
+	this.velY = 0; 
+	this.vidas = 4;
+	this.enSuelo = false;
+	this.imagen = Herramientas.cargarImagen(null);
+}
+
+//MOVIMIENTO//
+
+public void moverIzquierda() {
+	this.x -= VELOCIDAD;
+}
+public void moverDerecha() {
+	this.x += VELOCIDAD;
+}
+public void saltar() {
+	if (this.enSuelo) { //solo puede saltar si esta en el suelo
+		this.velY = FUERZA_SALTO;
+		this.enSuelo = false; //hasta que toque una isla es false
+	}
+	
+}
+
 }

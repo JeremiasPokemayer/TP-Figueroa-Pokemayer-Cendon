@@ -1,7 +1,5 @@
 package juego;
-
 import java.util.Random;
-
 import entorno.Entorno;
 import entorno.InterfaceJuego;
 
@@ -22,13 +20,14 @@ public class Juego extends InterfaceJuego
 			return (random.nextInt(490)+250);
 		}
 	}
-	// El objeto Entorno que controla el tiempo y otros
+	// el objeto entorno que controla el tiempo y otros
 	private Entorno entorno;
 	
-	// Variables y métodos propios de cada grupo
-	// ...
+	// variables y metodos propios de cada grupo
+	
 	private Isla[] isla;
 	private int camaraX; // variable para mover la camara conforme al personaje. 
+	private Enemigos[] enemigos;
 	
 	Juego()
 	{
@@ -54,16 +53,21 @@ public class Juego extends InterfaceJuego
 			}
 			this.isla[i]=nueva;
 		}
+		
+		
+		//enemigos
+		this.enemigos = new Enemigos[2];
+		this.enemigos[0] = new Enemigos(entorno, camaraX);
+		this.enemigos[1] = new Enemigos(entorno,camaraX);
+		//para darle distancia al otro enemigo
+		this.enemigos[1].setX(this.enemigos[1].getX() + 300);
+		
+		
 		// Inicia el juego!
 		this.entorno.iniciar();
 	}
 
-	/**
-	 * Durante el juego, el método tick() será ejecutado en cada instante y 
-	 * por lo tanto es el método más importante de esta clase. Aquí se debe 
-	 * actualizar el estado interno del juego para simular el paso del tiempo 
-	 * (ver el enunciado del TP para mayor detalle).
-	 */
+
 	public void tick()
 	{
 		// Procesamiento de un instante de tiempo
@@ -71,6 +75,24 @@ public class Juego extends InterfaceJuego
 		for(int i=0;i<isla.length;i++) {
 			isla[i].dibujarIsla(entorno,camaraX);
 		}
+		
+		
+		//enemigoos actuales
+		for (int i = 0; i < enemigos.length; i++) {
+	        // importante que el casillero no este null
+	        if (this.enemigos[i] != null) {
+	            //movemos al enemigo y chequeamos si choca con
+	            this.enemigos[i].actualizar(this.isla);
+	            //vemos si salio de camcarax
+	            if (this.enemigos[i].SalioPantalla(entorno, camaraX)) {
+	                this.enemigos[i] = null;
+	            } else {
+	                this.enemigos[i].dibujar(entorno, camaraX);
+	            }
+	        }
+	    }
+		
+		
 	}
 	
 

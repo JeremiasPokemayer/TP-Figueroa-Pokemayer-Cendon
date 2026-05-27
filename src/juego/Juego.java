@@ -28,6 +28,7 @@ public class Juego extends InterfaceJuego
 	private Isla[] isla;
 	private int camaraX; // variable para mover la camara conforme al personaje. 
 	private Enemigos[] enemigos;
+	private Princesa princesa;
 	
 	Juego()
 	{
@@ -39,7 +40,8 @@ public class Juego extends InterfaceJuego
 		this.isla[0]= new Isla(200,565,400,100);
 		this.isla[1]= new Isla(650,565,300,100);
 		this.isla[2]= new Isla(1200,565,500,100); 	// islas base
-		for(int i = 3;i<this.isla.length;i++) {
+		this.isla[3]= new Isla(400,355,400,40);		// primer isla
+		for(int i = 4;i<this.isla.length;i++) {
 			Isla nueva = new Isla(Aleatorio.numAleatX(),Aleatorio.numAleatY(),Aleatorio.numAleatAncho(),40); //islas flotantes
 			boolean colisiona=true;
 			while(colisiona) {
@@ -62,6 +64,9 @@ public class Juego extends InterfaceJuego
 		//para darle distancia al otro enemigo
 		this.enemigos[1].setX(this.enemigos[1].getX() + 300);
 		
+		//princesa
+		this.princesa=new Princesa(400,300);
+		
 		
 		// Inicia el juego!
 		this.entorno.iniciar();
@@ -76,8 +81,7 @@ public class Juego extends InterfaceJuego
 			isla[i].dibujarIsla(entorno,camaraX);
 		}
 		
-		
-		//enemigoos actuales
+		//MOVIMIENTO ENEMIGOS
 		for (int i = 0; i < enemigos.length; i++) {
 	        // importante que el casillero no este null
 	        if (this.enemigos[i] != null) {
@@ -92,6 +96,34 @@ public class Juego extends InterfaceJuego
 	        }
 	    }
 		
+		//MOVIMIENTO PRINCESA
+		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)) {
+			princesa.moverDerecha();
+		};
+		
+		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)) {
+			princesa.moverIzquierda();
+		};
+		
+		princesa.actualizarFisica();
+		
+		boolean tocandoSuelo = false;
+		
+		for(int i = 0; i<isla.length;i++) {
+			if(princesa.colisionaCon(isla[i])) {
+				tocandoSuelo = true;
+			}
+		}
+		
+		if(!tocandoSuelo) {
+			princesa.despegar();
+		}
+		
+		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA)) {
+			princesa.saltar();
+		};
+		
+		princesa.dibujarPrincesa(entorno, camaraX);
 		
 	}
 	

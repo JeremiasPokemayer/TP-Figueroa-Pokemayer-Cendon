@@ -19,7 +19,7 @@ public class Isla {
 	
 	public boolean alejaDe(Isla otra) {
 		int margenX = 80;
-		int margenY = 60;
+		int margenY = 90;
 		
 		return
 			this.x - this.ancho / 2 - margenX < otra.x + otra.ancho / 2 &&

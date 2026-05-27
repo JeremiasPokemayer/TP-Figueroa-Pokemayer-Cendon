@@ -1,4 +1,5 @@
 package juego;
+import java.awt.Color;
 import java.awt.Image;
 import entorno.Entorno;
 import entorno.Herramientas;
@@ -12,19 +13,23 @@ private int vidas;
 private boolean enSuelo; //true cuando esta parada sobre algo
 private Image imagen;
 
-private static final double VELOCIDAD = 5;
-private static final double GRAVEDAD= 0.5;
-private static final double FUERZA_SALTO= -12;
-public static final int ANCHO= 40;
-public static final int ALTO= 60;
+private static int VELOCIDAD = 5;
+private static double GRAVEDAD= 0.6;
+private static double FUERZA_SALTO= -15;
+public static int ANCHO= 40;
+public static double ALTO= 60;
 
-public Princesa(double x, double y) {
+public Princesa(int x, int y) {
 	this.x = x;
 	this.y = y;
 	this.velY = 0; 
 	this.vidas = 4;
 	this.enSuelo = false;
-	this.imagen = Herramientas.cargarImagen(null);
+//	this.imagen = Herramientas.cargarImagen(null);
+}
+
+public void dibujarPrincesa(Entorno entorno, int camaraX) {
+	entorno.dibujarRectangulo(this.x - camaraX, this.y, this.ANCHO, this.ALTO, 0, Color.GREEN);
 }
 
 //MOVIMIENTO//
@@ -40,7 +45,6 @@ public void saltar() {
 		this.velY = FUERZA_SALTO;
 		this.enSuelo = false; //hasta que toque una isla es false
 	}
-	
 }
 //FISICAS
 public void actualizarFisica() {
@@ -51,10 +55,45 @@ public void actualizarFisica() {
 } 
 
 //LLama a la funcion cuando los pies de la princesa tocan el suelo de una isla
-public void aterrizaEn(double pisoY) {
-	this.y =pisoY - ALTO/2.0;
-	this.velY = 0;
-	this.enSuelo = true;
+public boolean colisionaCon(Isla isla) {
+	double arribaI= isla.getY() - isla.getAlto()/2; 	//piso de la isla
+	double abajoI = isla.getY() + isla.getAlto()/2;		//techo de la isla
+	double izquierdaI = isla.getX() - isla.getAncho()/2;//izq de la isla
+	double derechaI = isla.getX() + isla.getAncho()/2;	//der de la isla
+	
+	double abajoP= this.y + ALTO/2;			//pies pricesa
+	double arribaP = this.y - ALTO/2;		//cabeza pricesa
+	double izquierdaP = this.x - ANCHO/2;	//izq pricesa
+	double derechaP = this.x + ANCHO/2;		//der pricesa
+
+	boolean colision =
+			derechaP > izquierdaI &&
+			izquierdaP < derechaI &&
+			abajoP > arribaI &&
+			arribaP < abajoI;
+			
+	if(colision && velY>=0 && abajoP - velY<= arribaI) {
+		this.y = arribaI - ALTO/2;
+		this.velY = 0;
+		this.enSuelo = true;
+		
+		return true;
+	}
+	
+	else if(colision && velY < 0 && arribaP - velY >= abajoI) {
+		this.y = abajoI + ALTO/2;
+		this.velY = 0;
+	}
+	
+	else if(colision && this.x > isla.getX()) {
+		this.x = derechaI + ANCHO/2;
+	}
+	
+	else if(colision && this.x< isla.getX()) {
+		this.x = izquierdaI - ANCHO/2;
+	}
+	
+	return false;
 }
 
 //LLama a la funcion cuando la princesa no esta sobre ninguna isla
@@ -62,6 +101,9 @@ public void despegar() {
 	this.enSuelo = false;
 }
 
+public boolean isEnSuelo() {
+	return enSuelo;
+}
 
 
 }

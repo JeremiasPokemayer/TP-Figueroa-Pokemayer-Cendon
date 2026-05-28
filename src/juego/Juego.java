@@ -103,7 +103,10 @@ public class Juego extends InterfaceJuego
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)) {
 			princesa.moverIzquierda();
-		};
+		}
+		
+		this.camaraX = (int)(this.princesa.getX() - 400);
+		if(this.camaraX < 0) this.camaraX = 0; //la princesa no puede retroceder antes del inicio del mapa
 		
 		princesa.actualizarFisica();
 		
@@ -124,6 +127,7 @@ public class Juego extends InterfaceJuego
 		};
 		
 		princesa.dibujarPrincesa(entorno, camaraX);
+		princesa.dibujarVidas(entorno);
 		
 	}
 	

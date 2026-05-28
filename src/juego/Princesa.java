@@ -104,6 +104,27 @@ public void despegar() {
 public boolean isEnSuelo() {
 	return enSuelo;
 }
+public void perderVida() {
+	this.vidas= this.vidas -1;
+}
+public void dibujarVidas(Entorno entorno) {
+	entorno.cambiarFont("Arial", 20, Color.RED);
+	entorno.escribirTexto("Vidas: " + this.vidas, 20, 30);
+}
 
+public double getX() {
+	return x;
+}
+
+public double getY() {
+	return y;
+}
+
+public int getVidas() {
+	return vidas;
+}
+public boolean estaViva() {
+	return this.vidas>0;
+}
 
 }

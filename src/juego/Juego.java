@@ -59,13 +59,11 @@ public class Juego extends InterfaceJuego
 		
 		//enemigos
 		this.enemigos = new Enemigos[2];
-		this.enemigos[0] = new Enemigos(entorno, camaraX);
-		this.enemigos[1] = new Enemigos(entorno,camaraX);
-		//para darle distancia al otro enemigo
-		this.enemigos[1].setX(this.enemigos[1].getX() + 300);
+		this.enemigos[0] = new Enemigos(1100, 460);
+		this.enemigos[1] = new Enemigos(900, 460);
 		
 		//princesa
-		this.princesa=new Princesa(400,300);
+		this.princesa =new Princesa(400,300);
 		
 		
 		// Inicia el juego!
@@ -83,16 +81,17 @@ public class Juego extends InterfaceJuego
 		
 		//MOVIMIENTO ENEMIGOS
 		for (int i = 0; i < enemigos.length; i++) {
-	        // importante que el casillero no este null
 	        if (this.enemigos[i] != null) {
-	            //movemos al enemigo y chequeamos si choca con
-	            this.enemigos[i].actualizar(this.isla);
-	            //vemos si salio de camcarax
-	            if (this.enemigos[i].SalioPantalla(entorno, camaraX)) {
-	                this.enemigos[i] = null;
-	            } else {
-	                this.enemigos[i].dibujar(entorno, camaraX);
+	            //para que se mueva el npc pixel por pixel en isla
+	        	this.enemigos[i].actualizar(this.isla);
+	            // chequeamos si el enemigo toco a la princesa
+	            if (this.enemigos[i].colisionConPrincesa(this.princesa)) {
+	            	this.princesa.perderVida();
+	            	this.enemigos[i] = null;
+	            	continue;
 	            }
+	            	//esto dibuja a los enemigos siempre
+	            this.enemigos[i].dibujar(entorno, camaraX);
 	        }
 	    }
 		

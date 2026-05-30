@@ -102,14 +102,39 @@ public class Juego extends InterfaceJuego
 		};
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)) {
-			princesa.moverIzquierda();
+		    princesa.moverIzquierda(this.camaraX);
 		}
-		
+
+		this.camaraX = (int)(this.princesa.getX() - 400);
+		if(this.camaraX < 0) {
+		    this.camaraX = 0;
+		    // forzamos que la princesa no pase del borde visible
+		    if(this.princesa.getX() - Princesa.ANCHO / 2 < 0) {
+		    	this.princesa.setX((double)(Princesa.ANCHO / 2));
+		    }
+		}
 		this.camaraX = (int)(this.princesa.getX() - 400);
 		if(this.camaraX < 0) this.camaraX = 0; //la princesa no puede retroceder antes del inicio del mapa
 		
 		princesa.actualizarFisica();
 		
+		if (this.princesa.getY() > this.entorno.alto()) {
+		    this.princesa.perderVida();
+		    if (!this.princesa.estaViva()) {
+		        // reinicia todo el juego
+		        this.princesa = new Princesa(400, 300);
+		        this.camaraX = 0;
+		    } else {
+		        // solo reinicia posicion
+		        this.princesa.reiniciar();
+		        this.camaraX = 0;
+		    }
+		}
+		
+		if (this.princesa.getY() > this.entorno.alto()) {
+		    this.princesa.reiniciar();
+		    this.camaraX = 0;
+		}    
 		boolean tocandoSuelo = false;
 		
 		for(int i = 0; i<isla.length;i++) {
@@ -127,11 +152,8 @@ public class Juego extends InterfaceJuego
 		};
 		
 		princesa.dibujarPrincesa(entorno, camaraX);
-		princesa.dibujarVidas(entorno);
-		
-	}
-	
-
+		princesa.dibujarVidas(entorno);	
+	}	
 	@SuppressWarnings("unused")
 	public static void main(String[] args)
 	{

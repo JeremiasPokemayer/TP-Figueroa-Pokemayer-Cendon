@@ -34,7 +34,10 @@ public void dibujarPrincesa(Entorno entorno, int camaraX) {
 
 //MOVIMIENTO//
 
-public void moverIzquierda() {
+public void moverIzquierda(int camaraX) {
+	if (this.x - ANCHO/2 > 0) {
+		this.x -=VELOCIDAD;
+	}
 	this.x -= VELOCIDAD;
 }
 public void moverDerecha() {
@@ -112,6 +115,13 @@ public void dibujarVidas(Entorno entorno) {
 	entorno.escribirTexto("Vidas: " + this.vidas, 20, 30);
 }
 
+public void reiniciar() {
+    this.x = 400;
+    this.y = 300;
+    this.velY = 0;
+    this.enSuelo = false;
+}
+
 public double getX() {
 	return x;
 }
@@ -125,6 +135,9 @@ public int getVidas() {
 }
 public boolean estaViva() {
 	return this.vidas>0;
+}
+public void setX(double x) {
+    this.x = x;
 }
 
 }

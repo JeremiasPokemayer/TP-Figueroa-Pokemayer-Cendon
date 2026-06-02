@@ -34,10 +34,10 @@ public class Enemigos {
 		double derecha1 =this.x +this.ancho/2;	
 		
 		//princesa
-		double abajo2= princesa.getY() - Princesa.ALTO/2;
+		double abajo2= princesa.getY() + Princesa.ALTO/2;
 		double arriba2 = princesa.getY() - Princesa.ALTO/2;
 		double izquierda2 = princesa.getX() - Princesa.ANCHO/2;	//izq pricesa
-		double derecha2 = princesa.getX() - Princesa.ANCHO/2;		//der pricesa
+		double derecha2 = princesa.getX() + Princesa.ANCHO/2;		//der pricesa
 		
 		return derecha1 > izquierda2 &&
 				izquierda1 < derecha2 &&

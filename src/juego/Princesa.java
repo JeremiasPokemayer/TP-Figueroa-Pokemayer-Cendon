@@ -35,9 +35,6 @@ public void dibujarPrincesa(Entorno entorno, int camaraX) {
 //MOVIMIENTO//
 
 public void moverIzquierda(int camaraX) {
-	if (this.x - ANCHO/2 > 0) {
-		this.x -=VELOCIDAD;
-	}
 	this.x -= VELOCIDAD;
 }
 public void moverDerecha() {

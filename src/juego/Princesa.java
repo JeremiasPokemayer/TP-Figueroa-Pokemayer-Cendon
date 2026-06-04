@@ -12,6 +12,7 @@ private double velY; //velocidad vertical (gravedad y salto)
 private int vidas;
 private boolean enSuelo; //true cuando esta parada sobre algo
 private Image imagen;
+private Image VIDAS;
 
 private static int VELOCIDAD = 5;
 private static double GRAVEDAD= 0.6;
@@ -25,11 +26,15 @@ public Princesa(int x, int y) {
 	this.velY = 0; 
 	this.vidas = 4;
 	this.enSuelo = false;
-//	this.imagen = Herramientas.cargarImagen(null);
+	this.imagen = Herramientas.cargarImagen("imagenes/PRINCESA.png");
+	this.imagen = this.imagen.getScaledInstance(50, 70, Image.SCALE_SMOOTH);
+	this.VIDAS = Herramientas.cargarImagen("imagenes/VIDAS.png");
+    this.VIDAS = this.VIDAS.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 }
 
 public void dibujarPrincesa(Entorno entorno, int camaraX) {
-	entorno.dibujarRectangulo(this.x - camaraX, this.y, this.ANCHO, this.ALTO, 0, Color.GREEN);
+    entorno.dibujarImagen(this.imagen, this.x - camaraX, this.y, 0);
+    
 }
 
 //MOVIMIENTO//
@@ -108,10 +113,15 @@ public void perderVida() {
 	this.vidas= this.vidas -1;
 }
 public void dibujarVidas(Entorno entorno) {
-	entorno.cambiarFont("Arial", 20, Color.RED);
-	entorno.escribirTexto("Vidas: " + this.vidas, 20, 30);
+    for(int i = 0; i < this.vidas; i++) {
+        entorno.dibujarImagen(
+            this.VIDAS,
+            30 + i * 40,
+            30,
+            0
+        );
+    }
 }
-
 public void reiniciar() {
     this.x = 400;
     this.y = 300;

@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.util.Random;
 import entorno.Entorno;
 import entorno.InterfaceJuego;
+import java.awt.Image;
+import entorno.Herramientas;
 
 public class Juego extends InterfaceJuego
 {
@@ -32,11 +34,14 @@ public class Juego extends InterfaceJuego
 	private Enemigos[] enemigos;
 	private Princesa princesa;
 	private Castillo castillo;
+	private Image fondo;
 	
 	Juego()
 	{
 		// Inicializa el objeto entorno
 		this.entorno = new Entorno(this, "Proyecto para TP", 800, 600);
+		this.fondo = Herramientas.cargarImagen("imagenes/fondo.jpg");
+		this.fondo = this.fondo.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
 		// Inicializar lo que haga falta para el juego
 		this.isla = new Isla[15];
 		
@@ -85,6 +90,7 @@ public class Juego extends InterfaceJuego
 	{
 		// Procesamiento de un instante de tiempo
 		// ...
+		entorno.dibujarImagen(fondo, 400, 300, 0);
 		for(int i=0;i<isla.length;i++) {
 			isla[i].dibujarIsla(entorno,camaraX);
 		}

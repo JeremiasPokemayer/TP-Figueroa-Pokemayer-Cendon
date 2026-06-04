@@ -14,9 +14,9 @@ private boolean enSuelo; //true cuando esta parada sobre algo
 private Image imagen;
 private Image VIDAS;
 
-private static int VELOCIDAD = 5;
+private static int VELOCIDAD = 6;
 private static double GRAVEDAD= 0.6;
-private static double FUERZA_SALTO= -15;
+private static double FUERZA_SALTO= -16.5;
 public static int ANCHO= 40;
 public static double ALTO= 60;
 

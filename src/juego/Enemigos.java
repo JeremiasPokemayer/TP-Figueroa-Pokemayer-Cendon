@@ -67,6 +67,20 @@ public class Enemigos {
 		return false;
 	}
 	
+	// metodos para generar enemigos en las islas
+	public static Enemigos crearArriba(Entorno entorno, int camaraX) {
+	    int posicionX = camaraX + entorno.ancho() + 50;
+	    int posicionY = 150; // Pasillo aéreo fijo
+	    return new Enemigos(posicionX, posicionY);
+	}
+	public static Enemigos crearAbajo(Entorno entorno, int camaraX) {
+	    int posicionX = camaraX + entorno.ancho() + 50;
+	    int posicionY = 460; // Pasillo terrestre fijo
+	    return new Enemigos(posicionX, posicionY);
+	}
+	
+	
+	
 	
 	public double getX() {
 		return x;

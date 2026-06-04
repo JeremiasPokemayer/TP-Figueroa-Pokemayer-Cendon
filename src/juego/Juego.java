@@ -33,6 +33,11 @@ public class Juego extends InterfaceJuego
 	private Princesa princesa;
 	private Castillo castillo;
 	
+	// para la generacion de enemigos
+	private int tiempoCreacionEnemigos; 
+	private int frecuenciaAparicion = 100;
+	private boolean turnoEnemigoArriba = true;
+	
 	Juego()
 	{
 		// Inicializa el objeto entorno
@@ -66,10 +71,8 @@ public class Juego extends InterfaceJuego
 		
 		
 		//enemigos
-		this.enemigos = new Enemigos[2];
-		this.enemigos[0] = new Enemigos(1100, 460);
-		this.enemigos[1] = new Enemigos(900, 460);
-		
+		this.enemigos = new Enemigos[4];
+
 		//princesa
 		this.princesa =new Princesa(400,300);
 		
@@ -89,21 +92,46 @@ public class Juego extends InterfaceJuego
 			isla[i].dibujarIsla(entorno,camaraX);
 		}
 		
+		//con esto hacemos que el enemigo tenga un tiempo para espaunear 
+		this.tiempoCreacionEnemigos++; 
+		if (this.tiempoCreacionEnemigos >= this.frecuenciaAparicion) {
+			this.tiempoCreacionEnemigos = 0; 
+			
+			for (int i = 0; i < enemigos.length; i++) {
+				if (this.enemigos[i] == null) {
+					//creacion arriba y abajo estan en enemigos
+					if(this.turnoEnemigoArriba) {
+						this.enemigos[i] = Enemigos.crearArriba(entorno, camaraX);
+					}else {
+						this.enemigos[i] = Enemigos.crearAbajo(entorno, camaraX);
+					}
+					// creamos el enemigo arriba si es true o abajo si es false
+					this.turnoEnemigoArriba = !this.turnoEnemigoArriba;
+					
+					break; // cortamos el bucle para crear por cantidad predeterminada
+					}
+				}
+			}
+		
 		//MOVIMIENTO ENEMIGOS
 		for (int i = 0; i < enemigos.length; i++) {
-	        if (this.enemigos[i] != null) {
-	            //para que se mueva el npc pixel por pixel en isla
-	        	this.enemigos[i].actualizar(this.isla);
-	            // chequeamos si el enemigo toco a la princesa
-	            if (this.enemigos[i].colisionConPrincesa(this.princesa)) {
-	            	this.princesa.perderVida();
-	            	this.enemigos[i] = null;
-	            	continue;
-	            }
-	            	//esto dibuja a los enemigos siempre
-	            this.enemigos[i].dibujar(entorno, camaraX);
-	        }
-	    }
+			if (this.enemigos[i] != null) {
+				this.enemigos[i].actualizar(this.isla);
+				
+				if (this.enemigos[i].colisionConPrincesa(this.princesa)) {
+					this.princesa.perderVida();
+					this.enemigos[i] = null;
+					continue;
+				}
+				
+				// si el enemigo quedo muy atrás a (osea a la izquierda) lo volvemos null
+				if (this.enemigos[i].SalioPantalla(entorno, camaraX)) {
+					this.enemigos[i] = null;
+				} else {
+					this.enemigos[i].dibujar(entorno, camaraX);
+				}
+			}
+		}
 		
 		//MOVIMIENTO PRINCESA
 		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)) {

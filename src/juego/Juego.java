@@ -82,7 +82,7 @@ public class Juego extends InterfaceJuego
 		this.princesa =new Princesa(400,300);
 		
 		//castillo
-		this.castillo = new Castillo(3870,365,200,300);
+		this.castillo = new Castillo(3870,365,300,350);
 		
 		// Inicia el juego!
 		this.entorno.iniciar();
@@ -197,11 +197,12 @@ public class Juego extends InterfaceJuego
 		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA)) {
 			princesa.saltar();
 		};
+
+		castillo.dibujarCastillo(entorno, camaraX);
 		
 		princesa.dibujarPrincesa(entorno, camaraX);
 		princesa.dibujarVidas(entorno);	
 		
-		castillo.dibujarCastillo(entorno, camaraX);
 		
 		if(this.castillo.colisionConPrincesa(princesa)) {
 			entorno.cambiarFont("Arial", 50, Color.CYAN);

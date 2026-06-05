@@ -126,8 +126,13 @@ public class Juego extends InterfaceJuego
 				
 				if (this.enemigos[i].colisionConPrincesa(this.princesa)) {
 					this.princesa.perderVida();
-					this.enemigos[i] = null;
-					continue;
+					if (!this.princesa.estaViva()) {
+				        this.princesa = new Princesa(400, 300);
+				        this.camaraX = 0;
+				    }
+
+				    this.enemigos[i] = null;
+				    continue;
 				}
 				
 				// si el enemigo quedo muy atrás a (osea a la izquierda) lo volvemos null

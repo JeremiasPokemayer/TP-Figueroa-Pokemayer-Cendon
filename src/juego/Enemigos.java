@@ -1,6 +1,8 @@
 package juego;
 import java.awt.Color;
 import entorno.Entorno;
+import java.awt.Image;
+import entorno.Herramientas;
 
 public class Enemigos {
 	
@@ -10,6 +12,7 @@ public class Enemigos {
 	private double ancho;
 	private int direccion;
 	private double velocidad;
+	private Image imagen;
 	
 	public Enemigos(int x, int y) {
 		this.ancho = 30; //tamaño
@@ -20,6 +23,8 @@ public class Enemigos {
 		this.direccion=-1;
 		this.y = y;
 		this.x = x;
+		this.imagen = Herramientas.cargarImagen("imagenes/enemigo.png");
+	    this.imagen = this.imagen.getScaledInstance(80, 70, Image.SCALE_SMOOTH);
 	}
 	
 	
@@ -52,7 +57,12 @@ public class Enemigos {
 	
 
 	public void dibujar(Entorno entorno, int camaraX) {
-		entorno .dibujarRectangulo(this.x - camaraX, this.y, this.ancho, this.alto, 0, Color.pink);
+	    entorno.dibujarImagen(
+	        this.imagen,
+	        this.x - camaraX,
+	        this.y,
+	        0
+	    );
 	}
 	
 	public boolean SalioPantalla(Entorno entorno, int camaraX) {
@@ -87,6 +97,16 @@ public class Enemigos {
 	}
 	public void setX(double x) {
 		this.x = x;
+	}
+
+
+	public int getAncho() {
+		return (int)this.ancho;
+	}
+
+
+	public double getY() {
+		return this.y;
 	}
 
 }

@@ -99,4 +99,14 @@ public class Enemigos {
 		this.x = x;
 	}
 
+
+	public int getAncho() {
+		return (int)this.ancho;
+	}
+
+
+	public double getY() {
+		return this.y;
+	}
+
 }

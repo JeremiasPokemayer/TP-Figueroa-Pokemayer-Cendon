@@ -35,6 +35,7 @@ public class Juego extends InterfaceJuego
 	private Princesa princesa;
 	private Castillo castillo;
 	private Image fondo;
+	private Proyectil proyectil;
 	
 	// para la generacion de enemigos
 	private int tiempoCreacionEnemigos; 
@@ -142,6 +143,43 @@ public class Juego extends InterfaceJuego
 					this.enemigos[i].dibujar(entorno, camaraX);
 				}
 			}
+		}
+		//DISPARO
+		if (this.entorno.sePresionoBoton(this.entorno.BOTON_IZQUIERDO)) {
+		    if (this.proyectil == null) { // solo dispara si no hay uno en vuelo
+		        this.proyectil = new Proyectil(
+		            this.princesa.getX(),
+		            this.princesa.getY(),
+		            this.entorno.mouseX(),
+		            this.entorno.mouseY(),
+		            this.camaraX
+		        );
+		    }
+		}
+
+		if (this.proyectil != null) {
+		    
+		    this.proyectil.actualizar();
+		    
+		    // primero chequeamos colision con enemigos
+		    for (int i = 0; i < this.enemigos.length; i++) {
+		        if (this.enemigos[i] != null) {
+		            if (this.proyectil.colisionaCon(this.enemigos[i])) {
+		                this.enemigos[i] = null;
+		                this.proyectil = null;
+		                break;
+		            }
+		        }
+		    }
+		    
+		    // despues de chequear colisiones, si sigue vivo lo movemos y dibujamos
+		    if (this.proyectil != null) {
+		        if (this.proyectil.salio(entorno, camaraX)) {
+		            this.proyectil = null;
+		        } else {
+		            this.proyectil.dibujar(entorno, camaraX);
+		        }
+		    }
 		}
 		
 		//MOVIMIENTO PRINCESA

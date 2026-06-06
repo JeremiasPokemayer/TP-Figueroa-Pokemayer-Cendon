@@ -22,7 +22,6 @@ public class Isla {
 	}
 	
 	public void dibujarIsla(Entorno entorno, int camaraX) {
-//		entorno.dibujarRectangulo(this.x - camaraX, this.y, this.ancho, this.alto, 0, Color.BLUE);
 		entorno.dibujarImagen (this.imagen, this.x - camaraX,this.y - 3 , 0);
 	}
 	

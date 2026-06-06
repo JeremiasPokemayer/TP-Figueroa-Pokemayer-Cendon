@@ -1,5 +1,6 @@
 package juego;
 
+import java.awt.Color;
 import java.awt.Image;
 
 import entorno.Entorno;
@@ -11,53 +12,64 @@ public class Boss {
 	private double alto;
 	private double ancho;
 	private int vida;
-	private int direccion;
-	private double velocidad;
 	private Image imagen;
 	
+	private double proyectilX;
+	private double proyectilY;
+	private double velProyectilX;
+	private double velProyectilY;
+	
+	private boolean proyectilActivo;
+	private int contadorDisparo;
+	
 	public Boss(int x, int y) {
-		this.ancho = 300; //tamaño
-		this.alto = 250; //alto
+		this.ancho = 300; 
+		this.alto = 250; 
 		this.vida = 10;
-		this.velocidad = 1.1; //lo rapido que va
-		
-		//los enemigos aparecen fueran del borde de la camarax
-		this.direccion=-1;
 		this.y = y;
 		this.x = x;
 		this.imagen = Herramientas.cargarImagen("imagenes/boss.png");
 	    this.imagen = this.imagen.getScaledInstance(300, 250, Image.SCALE_SMOOTH);
 	}
 	
-	
-	public boolean colisionConPrincesa(Princesa princesa) {
-		if(princesa == null) {
-			return false;
+	private void actualizarProyectil(){
+		if(proyectilActivo) {
+			proyectilX += velProyectilX;
+			proyectilY += velProyectilY;
 		}
-		//boss
-		double izquierdaB=this.x -this.ancho/2;
-		double arribaB =this.y - this.alto/2;		
-		double abajoB =this.y + this.alto/2;
-		double derechaB =this.x +this.ancho/2;	
-		
-		//princesa
-		double abajo2= princesa.getY() + Princesa.ALTO/2;
-		double arriba2 = princesa.getY() - Princesa.ALTO/2;
-		double izquierda2 = princesa.getX() - Princesa.ANCHO/2;	//izq pricesa
-		double derecha2 = princesa.getX() + Princesa.ANCHO/2;		//der pricesa
-		
-		return derechaB > izquierda2 &&
-				izquierdaB < derecha2 &&
-				arribaB < abajo2 &&
-				abajoB > arriba2;
 	}
 	
-	public void actualizar(Isla[] islas) {
-		//movimiento 
-		this.x= this.x + (this.velocidad * this.direccion);
+	public void disparar(Princesa princesa) {
+		this.proyectilX = this.x;
+		this.proyectilY = this.y;
+		
+		double dx = princesa.getX() - this.x;
+		double dy = princesa.getY() - this.y;
+		
+		double distancia = Math.sqrt(dx * dx + dy * dy);
+		
+		double velocidad = 5;
+		
+		this.velProyectilX = dx / distancia * velocidad;
+		this.velProyectilY = dy / distancia * velocidad;
+		
+		this.proyectilActivo = true;
 	}
 	
-
+	public void actualizar(Princesa princesa) {
+		contadorDisparo++;
+		
+		if(contadorDisparo >= 120) {
+			contadorDisparo = 0;
+			
+			if(!proyectilActivo) {
+				disparar(princesa);
+			}
+		}
+		
+		actualizarProyectil();
+	}
+	
 	public void dibujar(Entorno entorno) {
 	    entorno.dibujarImagen(
 	        this.imagen,
@@ -65,5 +77,19 @@ public class Boss {
 	        this.y,
 	        0
 	    );
+	    
+	    if(proyectilActivo) {
+	    	entorno.dibujarCirculo(proyectilX, proyectilY, 10.0, Color.RED);
+	    }
+	}
+
+	
+	public int getVida() {
+		return vida;
+	}
+
+
+	public void setVida(int vida) {
+		this.vida = vida;
 	}
 }

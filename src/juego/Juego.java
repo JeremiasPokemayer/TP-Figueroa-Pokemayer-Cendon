@@ -249,6 +249,10 @@ public class Juego extends InterfaceJuego
 		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)) {
 		    princesa.moverIzquierda(this.camaraX);
 		}
+		
+		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA)) {
+			princesa.saltar();
+		};
 
 		this.camaraX = (int)(this.princesa.getX() - 400);
 		int limiteMapa = 4000;
@@ -276,8 +280,6 @@ public class Juego extends InterfaceJuego
 		    if (!this.princesa.estaViva()) {
 		        // game over
 		    	estado = GAME_OVER;
-//		        this.princesa = new Princesa(400, 300);
-//		        this.camaraX = 0;
 		    } else {
 		        // solo reinicia posicion
 		        this.princesa.reiniciar();
@@ -296,10 +298,6 @@ public class Juego extends InterfaceJuego
 		if(!tocandoSuelo) {
 			princesa.despegar();
 		}
-		
-		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA)) {
-			princesa.saltar();
-		};
 
 		castillo.dibujarCastillo(entorno, camaraX);
 		
@@ -308,19 +306,36 @@ public class Juego extends InterfaceJuego
 		
 		
 		if(this.castillo.colisionConPrincesa(princesa)) {
+			princesa.setX(100);
+			princesa.setX(500);
 			estado=BOSS;
 		}
 	}
 	
 	private void pantallaBoss() {
 		entorno.dibujarImagen(fondoBoss, 400, 300, 0);
+
+		entorno.cambiarFont("Impact", 60, Color.RED);
+		entorno.escribirTexto("BOSS FINAL", 250, 150);
+		
+		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)) {
+			princesa.moverDerecha();
+		};
+		
+		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)) {
+		    princesa.moverIzquierda(this.camaraX);
+		}
+		
+		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA)) {
+			princesa.saltar();
+		};
+		
+		
+		boss.actualizar(princesa);
 		boss.dibujar(entorno);
 		
-		entorno.cambiarFont("Arial", 50, Color.RED);
-		entorno.escribirTexto("BOSS FINAL", 250, 150);
-
-		entorno.cambiarFont("Arial", 20, Color.WHITE);
-		entorno.escribirTexto("Aqui ira la pelea final", 250, 250);
+		princesa.dibujarPrincesa(entorno, 0);
+		princesa.dibujarVidas(entorno);
 	}
 	
 	private void pantallaGameOver() {

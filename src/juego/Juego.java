@@ -28,14 +28,24 @@ public class Juego extends InterfaceJuego
 	private Entorno entorno;
 	
 	// variables y metodos propios de cada grupo
+	private static final int MENU = 0;
+	private static final int JUGANDO = 1;
+	private static final int BOSS = 2;
+	private static final int GAME_OVER= 3;
+	
+	private int estado;
 	
 	private Isla[] isla;
 	private int camaraX; // variable para mover la camara conforme al personaje. 
 	private Enemigos[] enemigos;
+	private Boss boss;
 	private Princesa princesa;
 	private Castillo castillo;
-	private Image fondo;
 	private Proyectil proyectil;
+	private Image fondo;
+	private Image fondoBoss;
+	private Image fondoGO;
+	
 	
 	// para la generacion de enemigos
 	private int tiempoCreacionEnemigos; 
@@ -46,8 +56,15 @@ public class Juego extends InterfaceJuego
 	{
 		// Inicializa el objeto entorno
 		this.entorno = new Entorno(this, "Proyecto para TP", 800, 600);
+		
 		this.fondo = Herramientas.cargarImagen("imagenes/fondo.jpg");
 		this.fondo = this.fondo.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+		
+		this.fondoBoss = Herramientas.cargarImagen("imagenes/fondo-boss.jpg");
+		this.fondoBoss = this.fondoBoss.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+		
+		this.fondoGO = Herramientas.cargarImagen("imagenes/fondoGO.jpg");
+		this.fondoGO = this.fondoGO.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
 		// Inicializar lo que haga falta para el juego
 		this.isla = new Isla[15];
 		
@@ -85,6 +102,11 @@ public class Juego extends InterfaceJuego
 		//castillo
 		this.castillo = new Castillo(3870,365,300,350);
 		
+		//boss
+		this.boss = new Boss(600,400);
+		
+		this.estado = MENU;
+		
 		// Inicia el juego!
 		this.entorno.iniciar();
 	}
@@ -94,6 +116,42 @@ public class Juego extends InterfaceJuego
 	{
 		// Procesamiento de un instante de tiempo
 		// ...
+		
+		switch(estado) {
+			case MENU:
+				pantallaInicio();
+				break;
+				
+			case JUGANDO:
+				jugar();
+				break;
+				
+			case BOSS:
+				pantallaBoss();
+				break;
+				
+			case GAME_OVER:
+				pantallaGameOver();
+				break;
+		}
+	}
+	
+	//METODOS AUXILIARES
+	private void pantallaInicio() {
+		entorno.dibujarImagen(fondo, 400, 300, 0);
+		
+		entorno.cambiarFont("Arial",40, Color.CYAN);
+		entorno.escribirTexto("SUPER ELIZABETH", 140,220);
+		
+		entorno.cambiarFont("Arial",20, Color.WHITE);
+		entorno.escribirTexto("Presiona ENTER para comenzar", 220,320);
+		
+		if(entorno.estaPresionada(entorno.TECLA_ENTER)) {
+			estado = JUGANDO;
+		}
+	}
+	
+	private void jugar() {
 		entorno.dibujarImagen(fondo, 400, 300, 0);
 		for(int i=0;i<isla.length;i++) {
 			isla[i].dibujarIsla(entorno,camaraX);
@@ -128,8 +186,9 @@ public class Juego extends InterfaceJuego
 				if (this.enemigos[i].colisionConPrincesa(this.princesa)) {
 					this.princesa.perderVida();
 					if (!this.princesa.estaViva()) {
-				        this.princesa = new Princesa(400, 300);
-				        this.camaraX = 0;
+						estado = GAME_OVER;
+//				        this.princesa = new Princesa(400, 300);
+//				        this.camaraX = 0;
 				    }
 
 				    this.enemigos[i] = null;
@@ -215,9 +274,10 @@ public class Juego extends InterfaceJuego
 		if (this.princesa.getY() > this.entorno.alto()) {
 		    this.princesa.perderVida();
 		    if (!this.princesa.estaViva()) {
-		        // reinicia todo el juego
-		        this.princesa = new Princesa(400, 300);
-		        this.camaraX = 0;
+		        // game over
+		    	estado = GAME_OVER;
+//		        this.princesa = new Princesa(400, 300);
+//		        this.camaraX = 0;
 		    } else {
 		        // solo reinicia posicion
 		        this.princesa.reiniciar();
@@ -248,11 +308,43 @@ public class Juego extends InterfaceJuego
 		
 		
 		if(this.castillo.colisionConPrincesa(princesa)) {
-			entorno.cambiarFont("Arial", 50, Color.CYAN);
-			entorno.escribirTexto("GANASTE", 350, 300);
+			estado=BOSS;
 		}
-		}
+	}
 	
+	private void pantallaBoss() {
+		entorno.dibujarImagen(fondoBoss, 400, 300, 0);
+		boss.dibujar(entorno);
+		
+		entorno.cambiarFont("Arial", 50, Color.RED);
+		entorno.escribirTexto("BOSS FINAL", 250, 150);
+
+		entorno.cambiarFont("Arial", 20, Color.WHITE);
+		entorno.escribirTexto("Aqui ira la pelea final", 250, 250);
+	}
+	
+	private void pantallaGameOver() {
+		entorno.dibujarImagen(fondoGO, 400, 300, 0);
+
+		entorno.cambiarFont("Arial",30, Color.WHITE);
+		entorno.escribirTexto("Presiona ENTER para volver a jugar", 170,500);
+		
+		if(entorno.sePresiono(entorno.TECLA_ENTER)) {
+			
+			reiniciarJuego();
+			estado = JUGANDO;
+		}
+		
+	}
+	
+	private void reiniciarJuego() {
+		this.princesa = new Princesa(400,300);
+		this.camaraX = 0;
+		this.enemigos = new Enemigos[4];
+		this.proyectil = null;
+		this.tiempoCreacionEnemigos = 0;
+		this.turnoEnemigoArriba = true;
+	}
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args)

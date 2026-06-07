@@ -43,12 +43,24 @@ public class Proyectil {
     public double getY() { return this.y; }
     public int getRadio() { return RADIO; }
     
+    
+    
+    //colisiones con enemigos
     public boolean colisionaCon(Enemigos enemigo) {
         double dx = this.x - enemigo.getX();
         double dy = this.y - enemigo.getY();
         double distancia = Math.sqrt(dx * dx + dy * dy);
         return distancia < RADIO + enemigo.getAncho() / 2;
     }
+    
+    public boolean colisionaConMejorado(EnemigosMejorados enemigo) {
+        double dx = this.x - enemigo.getX();
+        double dy = this.y - enemigo.getY();
+        double distancia = Math.sqrt(dx * dx + dy * dy);
+        
+        return distancia < RADIO + enemigo.getAncho()/2;
+    }
+    
 }
 
 

@@ -67,6 +67,8 @@ public class Juego extends InterfaceJuego
 		this.fondoGO = Herramientas.cargarImagen("imagenes/fondoGO.jpg");
 		this.fondoGO = this.fondoGO.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
 		// Inicializar lo que haga falta para el juego
+		
+		//islas
 		this.isla = new Isla[15];
 		
 		this.isla[0]= new Isla(200,565,400,100);	// islas base
@@ -94,13 +96,14 @@ public class Juego extends InterfaceJuego
 		}
 		
 		
-		//enemigos
-		this.enemigos = new Enemigos[4];
-		this.enemigosMejorados = new EnemigosMejorados[3];
+		//ENEMIGOS
+		this.enemigos = new Enemigos[5];
+		this.enemigosMejorados = new EnemigosMejorados[4];
 		
 		this.enemigosMejorados[0] = new EnemigosMejorados(3200, 460);
 		this.enemigosMejorados[1] = new EnemigosMejorados(3200, 150);
 		this.enemigosMejorados[2] = new EnemigosMejorados(3000, 150);
+		this.enemigosMejorados[3] = new EnemigosMejorados(3000, 450);
 		//princesa
 		this.princesa =new Princesa(400,300);
 		
@@ -112,7 +115,7 @@ public class Juego extends InterfaceJuego
 		
 		this.estado = MENU;
 		
-		// Inicia el juego!
+		// Inicia el juego
 		this.entorno.iniciar();
 	}
 
@@ -192,8 +195,8 @@ public class Juego extends InterfaceJuego
 					this.princesa.perderVida();
 					if (!this.princesa.estaViva()) {
 						estado = GAME_OVER;
-//				        this.princesa = new Princesa(400, 300);
-//				        this.camaraX = 0;
+						this.princesa = new Princesa(400, 300);
+				        this.camaraX = 0;
 				    }
 
 				    this.enemigos[i] = null;
@@ -219,6 +222,8 @@ public class Juego extends InterfaceJuego
 				// si choca a la princesa le saca vida y null
 				if (this.enemigosMejorados[i].colisionConPrincesa(this.princesa)) {
 					this.princesa.perderVida();
+					this.princesa.perderVida();
+					//vemos si sigue viva
 					if (!this.princesa.estaViva()) {
 						estado = GAME_OVER;
 					}
@@ -249,6 +254,7 @@ public class Juego extends InterfaceJuego
 		if (this.proyectil != null) {
 		    
 		    this.proyectil.actualizar();
+		    boolean impactoE=false;
 		    
 		    // primero chequeamos colision con enemigos
 		    for (int i = 0; i < this.enemigos.length; i++) {
@@ -256,7 +262,32 @@ public class Juego extends InterfaceJuego
 		            if (this.proyectil.colisionaCon(this.enemigos[i])) {
 		                this.enemigos[i] = null;
 		                this.proyectil = null;
+		                impactoE = true;
 		                break;
+		            }
+		        }
+		    }
+		    
+		 // chequeamos que haya golpeado con los Enemigos MEJORADOS
+		    if (!impactoE && this.enemigosMejorados != null) {
+		        for (int i = 0; i < this.enemigosMejorados.length; i++) {
+		            if (this.enemigosMejorados[i] != null) {
+		                
+		                // usamos el nuevo metodo que agregue en proyectil
+		                if (this.proyectil.colisionaConMejorado(this.enemigosMejorados[i])) {
+		                    
+		                    // le vamos a bajar una vida al enemigo mejorado
+		                    int vidaActual = this.enemigosMejorados[i].getVida();
+		                    this.enemigosMejorados[i].setVida(vidaActual - 1);
+		                    
+		                    // si se quedo sin vidas, lo borramos null
+		                    if (this.enemigosMejorados[i].getVida() <= 0) {
+		                        this.enemigosMejorados[i] = null;
+		                    }
+		                    
+		                    this.proyectil = null; // la bala desaparece siempre al chocar
+		                    break;
+		                }
 		            }
 		        }
 		    }
@@ -385,8 +416,8 @@ public class Juego extends InterfaceJuego
 	private void reiniciarJuego() {
 		this.princesa = new Princesa(400,300);
 		this.camaraX = 0;
-		this.enemigos = new Enemigos[4];
-		this.enemigosMejorados = new EnemigosMejorados[3];
+		this.enemigos = new Enemigos[5];
+		this.enemigosMejorados = new EnemigosMejorados[4];
 		this.proyectil = null;
 		this.tiempoCreacionEnemigos = 0;
 		this.turnoEnemigoArriba = true;

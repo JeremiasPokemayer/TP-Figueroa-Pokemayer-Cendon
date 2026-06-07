@@ -72,38 +72,29 @@ public class EnemigosMejorados {
 	
 	
 	
-	
-	
-	
-	
+	//getters y Setters
+	public double getAncho() {
+		return ancho;
+	}
+	public void setAncho(double ancho) {
+		this.ancho = ancho;
+	}
 	public double getX() {
 		return x;
 	}
-
-
 	public void setX(double x) {
 		this.x = x;
 	}
-
-
 	public double getY() {
 		return y;
 	}
-
-
 	public void setY(double y) {
 		this.y = y;
 	}
-
-
 	public int getVida() {
 		return vida;
 	}
-
-
 	public void setVida(int vida) {
 		this.vida = vida;
 	}
-	
-	
 }

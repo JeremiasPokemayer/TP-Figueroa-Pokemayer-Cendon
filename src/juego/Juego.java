@@ -127,7 +127,7 @@ public class Juego extends InterfaceJuego
 		this.castillo = new Castillo(3870,365,300,350);
 		
 		//boss
-		this.boss = new Boss(400,350);
+		this.boss = new Boss(380,350);
 		
 		this.estado = MENU;
 		
@@ -394,9 +394,6 @@ public class Juego extends InterfaceJuego
 	
 	private void pantallaBoss() {
 		entorno.dibujarImagen(fondoBoss, 400, 300, 0);
-
-		entorno.cambiarFont("Impact", 60, Color.RED);
-		entorno.escribirTexto("BOSS FINAL", 250, 150);
 		
 		islaBoss.dibujarIsla(entorno, 0);
 		
@@ -471,12 +468,13 @@ public class Juego extends InterfaceJuego
 			}
 		}
 		
-		entorno.cambiarFont("Arial", 25, Color.WHITE);
-		entorno.escribirTexto(
-		    "Vida Boss: " + boss.getVida(),
-		    20,
-		    80
-		);
+		for (int i = 0; i < 10; i++) {
+			int x = 180 + i * 50;
+			entorno.dibujarRectangulo(x,110, 64, 34, 0,Color.BLACK);
+			if(i<boss.getVida()) {
+				entorno.dibujarRectangulo(x,110, 60, 30, 0,Color.RED);
+			}
+		}
 		
 		boss.actualizar(princesa,entorno);
 		boss.dibujar(entorno);
@@ -500,7 +498,7 @@ public class Juego extends InterfaceJuego
 	
 	private void reiniciarJuego() {
 		this.princesa = new Princesa(400,300);
-		this.boss = new Boss(400,350);
+		this.boss = new Boss(380,350);
 		this.camaraX = 0;
 		this.enemigos = new Enemigos[5];
 		this.enemigosMejorados = new EnemigosMejorados[4];

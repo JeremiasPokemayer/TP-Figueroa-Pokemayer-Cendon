@@ -55,6 +55,8 @@ public class Juego extends InterfaceJuego
 	private int tiempoCreacionEnemigos; 
 	private int frecuenciaAparicion = 100;
 	private boolean turnoEnemigoArriba = true;
+	private int contadorEnemigos ;
+	
 	
 	Juego()
 	{
@@ -115,6 +117,9 @@ public class Juego extends InterfaceJuego
 		this.enemigosMejorados[1] = new EnemigosMejorados(3200, 150);
 		this.enemigosMejorados[2] = new EnemigosMejorados(3000, 150);
 		this.enemigosMejorados[3] = new EnemigosMejorados(3000, 450);
+		this.contadorEnemigos = 0;
+		
+		
 		//princesa
 		this.princesa =new Princesa(400,300);
 		
@@ -272,6 +277,12 @@ public class Juego extends InterfaceJuego
 		                this.enemigos[i] = null;
 		                this.proyectil = null;
 		                impactoE = true;
+		                
+		                this.contadorEnemigos ++;
+		                if(this.contadorEnemigos == 5) {
+		                	this.princesa.recuperarVida();
+		                	this.contadorEnemigos = 0;
+		                }
 		                break;
 		            }
 		        }
@@ -373,7 +384,7 @@ public class Juego extends InterfaceJuego
 		
 		princesa.dibujarPrincesa(entorno, camaraX);
 		princesa.dibujarVidas(entorno);	
-		
+		this.dibujarContadorMuertes();
 		
 		if(this.castillo.colisionConPrincesa(princesa)) {
 			princesa.setX(500);
@@ -474,6 +485,8 @@ public class Juego extends InterfaceJuego
 		princesa.dibujarVidas(entorno);
 	}
 	
+	
+	//FINAL
 	private void pantallaGameOver() {
 		entorno.dibujarImagen(fondoGO, 400, 300, 0);
 		
@@ -498,6 +511,7 @@ public class Juego extends InterfaceJuego
 		this.proyectil = null;
 		this.tiempoCreacionEnemigos = 0;
 		this.turnoEnemigoArriba = true;
+		this.contadorEnemigos = 0;
 	}
 	
 	private void pantallaWin() {
@@ -508,6 +522,14 @@ public class Juego extends InterfaceJuego
 			estado = JUGANDO;
 		}
 	}
+	
+	private void dibujarContadorMuertes() {
+		entorno.cambiarFont("Arial", 14, java.awt.Color.black);
+		String texto="kills Enemigos: " + this.contadorEnemigos + "/5";
+		entorno.escribirTexto(texto, 580, 35);
+		
+	}
+	
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args)

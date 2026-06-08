@@ -24,7 +24,7 @@ public class EnemigosMejorados {
 		this.vida = 2; // resiste hassta 2 tiros
 	}
 	
-	
+	//colision con la princesa
 	public boolean colisionConPrincesa(Princesa princesa) {
 		if(princesa == null) {
 			return false;
@@ -55,7 +55,7 @@ public class EnemigosMejorados {
 		entorno.dibujarRectangulo(this.x - camaraX, this.y, this.ancho, this.alto, 0, Color.YELLOW);
 	}
 	
-	
+	//salio por pantalla para que se vuelva null si sale que se hace en juegojava
 	public boolean SalioPantalla(Entorno entorno, int camaraX) {
 		if(this.x < (camaraX - this.ancho - 20)){
 			return true;

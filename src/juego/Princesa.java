@@ -127,6 +127,15 @@ public void dibujarVidas(Entorno entorno) {
         );
     }
 }
+
+
+public void recuperarVida() {
+	// solo le sumamos vida si tiene menos de 4
+	if (this.vidas < 4) {
+		this.vidas = this.vidas + 1;
+	}
+}
+
 public void reiniciar() {
     this.x = 400;
     this.y = 300;

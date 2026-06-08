@@ -1,6 +1,9 @@
 package juego;
 import java.awt.Color;
+import java.awt.Image;
+
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class EnemigosMejorados {
 
@@ -11,6 +14,8 @@ public class EnemigosMejorados {
 	private int direccion;
 	private double velocidad;
 	private int vida; //vida propia
+	private Image imagen;
+	
 	
 	
 	
@@ -22,6 +27,9 @@ public class EnemigosMejorados {
 		this.y = y;
 		this.x = x;
 		this.vida = 2; // resiste hassta 2 tiros
+		this.imagen=Herramientas.cargarImagen("imagenes/EnemigoMejorado.png");
+		this.imagen = this.imagen.getScaledInstance(80, 70, Image.SCALE_SMOOTH);
+				
 	}
 	
 	//colision con la princesa
@@ -52,7 +60,7 @@ public class EnemigosMejorados {
 	}
 	
 	public void dibujar(Entorno entorno, int camaraX) {
-		entorno.dibujarRectangulo(this.x - camaraX, this.y, this.ancho, this.alto, 0, Color.YELLOW);
+		entorno.dibujarImagen(this.imagen, this.x - camaraX, this.y, 0);
 	}
 	
 	//salio por pantalla para que se vuelva null si sale que se hace en juegojava

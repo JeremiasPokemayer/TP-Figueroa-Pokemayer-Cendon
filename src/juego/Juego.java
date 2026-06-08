@@ -32,10 +32,12 @@ public class Juego extends InterfaceJuego
 	private static final int JUGANDO = 1;
 	private static final int BOSS = 2;
 	private static final int GAME_OVER= 3;
+	private static final int GANASTE= 4;
 	
 	private int estado;
 	
 	private Isla[] isla;
+	private Isla islaBoss;
 	private int camaraX; // variable para mover la camara conforme al personaje. 
 	private Enemigos[] enemigos;
 	private EnemigosMejorados[] enemigosMejorados;
@@ -46,7 +48,8 @@ public class Juego extends InterfaceJuego
 	private Image fondo;
 	private Image fondoBoss;
 	private Image fondoGO;
-	
+	private Image fondoWin;
+	private Image fondoInicio;
 	
 	// para la generacion de enemigos
 	private int tiempoCreacionEnemigos; 
@@ -64,36 +67,44 @@ public class Juego extends InterfaceJuego
 		this.fondoBoss = Herramientas.cargarImagen("imagenes/fondo-boss.jpg");
 		this.fondoBoss = this.fondoBoss.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
 		
-		this.fondoGO = Herramientas.cargarImagen("imagenes/fondoGO.jpg");
+		this.fondoGO = Herramientas.cargarImagen("imagenes/fondoGO.png");
 		this.fondoGO = this.fondoGO.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+		
+		this.fondoWin = Herramientas.cargarImagen("imagenes/win.png");
+		this.fondoWin = this.fondoWin.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+		
+		this.fondoInicio= Herramientas.cargarImagen("imagenes/fondo-inicio.png");
+		this.fondoInicio= this.fondoInicio.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
 		// Inicializar lo que haga falta para el juego
 		
 		//islas
 		this.isla = new Isla[15];
 		
-		this.isla[0]= new Isla(200,565,400,100);	// islas base
-		this.isla[1]= new Isla(650,565,300,100);
-		this.isla[2]= new Isla(1200,565,500,100);
-		this.isla[3]= new Isla(1700,565,300,100);
-		this.isla[4]= new Isla(2100,565,300,100);
-		this.isla[5]= new Isla(2550,565,400,100);
-		this.isla[6]= new Isla(3000,565,200,100);
-		this.isla[7]= new Isla(3650,565,900,100);	//isla base final de castillo
-		this.isla[8]= new Isla(400,355,400,40);		// primer isla
+		this.isla[0]= new Isla(200,565,400,100,"imagenes/pasto2.png");	// islas base
+		this.isla[1]= new Isla(650,565,300,100,"imagenes/pasto2.png");
+		this.isla[2]= new Isla(1200,565,500,100,"imagenes/pasto2.png");
+		this.isla[3]= new Isla(1700,565,300,100,"imagenes/pasto2.png");
+		this.isla[4]= new Isla(2100,565,300,100,"imagenes/pasto2.png");
+		this.isla[5]= new Isla(2550,565,400,100,"imagenes/pasto2.png");
+		this.isla[6]= new Isla(3000,565,200,100,"imagenes/pasto2.png");
+		this.isla[7]= new Isla(3650,565,900,100,"imagenes/pasto2.png");	//isla base final de castillo
+		this.isla[8]= new Isla(400,355,400,40,"imagenes/pasto2.png");		// primer isla
 		for(int i = 9;i<this.isla.length;i++) {
-			Isla nueva = new Isla(Aleatorio.numAleatX(),Aleatorio.numAleatY(),Aleatorio.numAleatAncho(),40); //islas flotantes
+			Isla nueva = new Isla(Aleatorio.numAleatX(),Aleatorio.numAleatY(),Aleatorio.numAleatAncho(),40,"imagenes/pasto2.png"); //islas flotantes
 			boolean colisiona=true;
 			while(colisiona) {
 				colisiona=false;
 				for(int j = 0; j < i;j++) {
 					if(nueva.alejaDe(this.isla[j])) { //chequea que las islas no colisionen, si colisionan crea una nueva
 						colisiona=true;
-						nueva= new Isla(Aleatorio.numAleatX(),Aleatorio.numAleatY(),Aleatorio.numAleatAncho(),40);
+						nueva= new Isla(Aleatorio.numAleatX(),Aleatorio.numAleatY(),Aleatorio.numAleatAncho(),40,"imagenes/pasto2.png");
 					}
 				}
 			}
 			this.isla[i]=nueva;
 		}
+
+		this.islaBoss = new Isla(400,580,800,80,"imagenes/plataformaBoss2.jpg");
 		
 		
 		//ENEMIGOS
@@ -111,7 +122,7 @@ public class Juego extends InterfaceJuego
 		this.castillo = new Castillo(3870,365,300,350);
 		
 		//boss
-		this.boss = new Boss(600,400);
+		this.boss = new Boss(400,350);
 		
 		this.estado = MENU;
 		
@@ -141,18 +152,16 @@ public class Juego extends InterfaceJuego
 			case GAME_OVER:
 				pantallaGameOver();
 				break;
+			
+			case GANASTE:
+				pantallaWin();
+				break;
 		}
 	}
 	
 	//METODOS AUXILIARES
 	private void pantallaInicio() {
-		entorno.dibujarImagen(fondo, 400, 300, 0);
-		
-		entorno.cambiarFont("Arial",40, Color.CYAN);
-		entorno.escribirTexto("SUPER ELIZABETH", 140,220);
-		
-		entorno.cambiarFont("Arial",20, Color.WHITE);
-		entorno.escribirTexto("Presiona ENTER para comenzar", 220,320);
+		entorno.dibujarImagen(fondoInicio, 400, 300, 0);
 		
 		if(entorno.estaPresionada(entorno.TECLA_ENTER)) {
 			estado = JUGANDO;
@@ -367,7 +376,6 @@ public class Juego extends InterfaceJuego
 		
 		
 		if(this.castillo.colisionConPrincesa(princesa)) {
-			princesa.setX(100);
 			princesa.setX(500);
 			estado=BOSS;
 		}
@@ -378,6 +386,8 @@ public class Juego extends InterfaceJuego
 
 		entorno.cambiarFont("Impact", 60, Color.RED);
 		entorno.escribirTexto("BOSS FINAL", 250, 150);
+		
+		islaBoss.dibujarIsla(entorno, 0);
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)) {
 			princesa.moverDerecha();
@@ -391,8 +401,73 @@ public class Juego extends InterfaceJuego
 			princesa.saltar();
 		};
 		
+		if(princesa.getX() < Princesa.ANCHO / 2) {
+		    princesa.setX(Princesa.ANCHO / 2);
+		}
+
+		if(princesa.getX() > 800 - Princesa.ANCHO / 2) {
+		    princesa.setX(800 - Princesa.ANCHO / 2);
+		}
 		
-		boss.actualizar(princesa);
+		princesa.actualizarFisica();
+		
+		boolean tocandoSuelo = princesa.colisionaCon(islaBoss);
+		
+		if(!tocandoSuelo) {
+			princesa.despegar();
+		}
+		
+		if(boss.proyectilGolpea(princesa)) {
+			princesa.perderTresVidas();
+			
+			if(!princesa.estaViva()) {
+				estado = GAME_OVER;
+			}
+		}
+		
+		if (this.entorno.sePresionoBoton(this.entorno.BOTON_IZQUIERDO)) {
+		    if (this.proyectil == null) { // solo dispara si no hay uno en vuelo
+		        this.proyectil = new Proyectil(
+		            this.princesa.getX(),
+		            this.princesa.getY(),
+		            this.entorno.mouseX(),
+		            this.entorno.mouseY(),
+		            0
+		        );
+		    }
+		}
+		
+		if (this.proyectil != null) {
+		    
+		    this.proyectil.actualizar();
+		    
+		    if(boss.colisionaCon(this.proyectil)) {
+		    	boss.setVida(boss.getVida()-1);
+		    	
+		    	this.proyectil = null;
+		    	
+		    	if(boss.getVida() <= 0) {
+		    		estado = GANASTE;
+		    	}
+		    }
+		}
+		
+		if(this.proyectil != null) {
+			if(this.proyectil.salio(entorno,0)) {
+				this.proyectil = null;
+			}else {
+				this.proyectil.dibujar(entorno,0);
+			}
+		}
+		
+		entorno.cambiarFont("Arial", 25, Color.WHITE);
+		entorno.escribirTexto(
+		    "Vida Boss: " + boss.getVida(),
+		    20,
+		    80
+		);
+		
+		boss.actualizar(princesa,entorno);
 		boss.dibujar(entorno);
 		
 		princesa.dibujarPrincesa(entorno, 0);
@@ -401,9 +476,6 @@ public class Juego extends InterfaceJuego
 	
 	private void pantallaGameOver() {
 		entorno.dibujarImagen(fondoGO, 400, 300, 0);
-
-		entorno.cambiarFont("Arial",30, Color.WHITE);
-		entorno.escribirTexto("Presiona ENTER para volver a jugar", 170,500);
 		
 		if(entorno.sePresiono(entorno.TECLA_ENTER)) {
 			
@@ -415,12 +487,26 @@ public class Juego extends InterfaceJuego
 	
 	private void reiniciarJuego() {
 		this.princesa = new Princesa(400,300);
+		this.boss = new Boss(400,350);
 		this.camaraX = 0;
 		this.enemigos = new Enemigos[5];
 		this.enemigosMejorados = new EnemigosMejorados[4];
+		this.enemigosMejorados[0] = new EnemigosMejorados(3200, 460);
+		this.enemigosMejorados[1] = new EnemigosMejorados(3200, 150);
+		this.enemigosMejorados[2] = new EnemigosMejorados(3000, 150);
+		this.enemigosMejorados[3] = new EnemigosMejorados(3000, 450);
 		this.proyectil = null;
 		this.tiempoCreacionEnemigos = 0;
 		this.turnoEnemigoArriba = true;
+	}
+	
+	private void pantallaWin() {
+		entorno.dibujarImagen(fondoWin, 400, 300, 0);
+		
+		if(entorno.estaPresionada(entorno.TECLA_ENTER)) {
+			reiniciarJuego();
+			estado = JUGANDO;
+		}
 	}
 	
 	@SuppressWarnings("unused")

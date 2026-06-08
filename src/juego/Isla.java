@@ -12,12 +12,12 @@ public class Isla {
 	private int alto;
 	private java.awt.Image imagen;
 	
-	public Isla(int x,int y,int ancho,int alto) {
+	public Isla(int x,int y,int ancho,int alto, String rutaImagen) {
 		this.x=x;
 		this.y=y;
 		this.ancho=ancho;
 		this.alto=alto;
-		this.imagen=Herramientas.cargarImagen("imagenes/pasto2.png");
+		this.imagen=Herramientas.cargarImagen(rutaImagen);
 		this.imagen = this.imagen.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
 	}
 	

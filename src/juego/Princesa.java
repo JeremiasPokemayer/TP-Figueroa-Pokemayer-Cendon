@@ -112,6 +112,11 @@ public boolean isEnSuelo() {
 public void perderVida() {
 	this.vidas= this.vidas -1;
 }
+
+public void perderTresVidas() {
+	this.vidas= this.vidas -3;
+}
+
 public void dibujarVidas(Entorno entorno) {
     for(int i = 0; i < this.vidas; i++) {
         entorno.dibujarImagen(

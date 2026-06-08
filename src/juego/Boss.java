@@ -13,6 +13,7 @@ public class Boss {
 	private double ancho;
 	private int vida;
 	private Image imagen;
+	private Image imagenProyectil;
 	
 	private double proyectilX;
 	private double proyectilY;
@@ -23,13 +24,16 @@ public class Boss {
 	private int contadorDisparo;
 	
 	public Boss(int x, int y) {
-		this.ancho = 300; 
-		this.alto = 250; 
+		this.ancho = 2500; 
+		this.alto = 200; 
 		this.vida = 10;
 		this.y = y;
 		this.x = x;
 		this.imagen = Herramientas.cargarImagen("imagenes/boss.png");
-	    this.imagen = this.imagen.getScaledInstance(300, 250, Image.SCALE_SMOOTH);
+	    this.imagen = this.imagen.getScaledInstance(250, 200, Image.SCALE_SMOOTH);
+	    
+	    this.imagenProyectil = Herramientas.cargarImagen("imagenes/bola-fuego.png");
+	    this.imagenProyectil= this.imagenProyectil.getScaledInstance(40,40, Image.SCALE_SMOOTH);
 	}
 	
 	private void actualizarProyectil(){
@@ -56,7 +60,28 @@ public class Boss {
 		this.proyectilActivo = true;
 	}
 	
-	public void actualizar(Princesa princesa) {
+	public boolean proyectilSalio(Entorno entorno) {
+        return proyectilX < 0 || proyectilX > entorno.ancho() ||
+               proyectilY < 0 || proyectilY > entorno.alto();
+    }
+	
+	public boolean proyectilGolpea(Princesa princesa) {
+		if(!proyectilActivo){
+			return false;
+		}
+		
+		double dx = proyectilX - princesa.getX();
+		double dy = proyectilY - princesa.getY();
+		
+		if(Math.sqrt(dx*dx + dy*dy) < 20) {
+			proyectilActivo = false;
+			return true;
+		};
+		
+		return false;
+	}
+	
+	public void actualizar(Princesa princesa, Entorno entorno) {
 		contadorDisparo++;
 		
 		if(contadorDisparo >= 120) {
@@ -68,6 +93,22 @@ public class Boss {
 		}
 		
 		actualizarProyectil();
+		
+		if(proyectilActivo && proyectilSalio(entorno)) {
+			proyectilActivo = false;
+		}
+	}	
+	
+	public boolean colisionaCon(Proyectil p) {
+		double izquierda = this.x - this.ancho / 2;
+		double derecha = this.x + this.ancho / 2;
+		double arriba = this.y - this.alto / 2;
+		double abajo = this.y + this.alto / 2;
+		
+		double px = p.getX();
+		double py = p.getY();
+		
+		return px >= izquierda && px <= derecha && py >= arriba && py <= abajo;
 	}
 	
 	public void dibujar(Entorno entorno) {
@@ -79,7 +120,7 @@ public class Boss {
 	    );
 	    
 	    if(proyectilActivo) {
-	    	entorno.dibujarCirculo(proyectilX, proyectilY, 10.0, Color.RED);
+	    	entorno.dibujarImagen(this.imagenProyectil, proyectilX, proyectilY, 0);
 	    }
 	}
 

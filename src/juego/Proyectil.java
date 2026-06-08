@@ -1,6 +1,9 @@
 package juego;
 import java.awt.Color;
+import java.awt.Image;
+
 import entorno.Entorno;
+import entorno.Herramientas;
 
 
 public class Proyectil {
@@ -8,6 +11,7 @@ public class Proyectil {
     private double y;
     private double velX;
     private double velY;
+    private Image imagen;
     
     private static final double VELOCIDAD = 10;
     private static final int RADIO = 8;
@@ -15,6 +19,8 @@ public class Proyectil {
     public Proyectil(double xPrincesa, double yPrincesa, int mouseX, int mouseY, int camaraX) {
         this.x = xPrincesa;
         this.y = yPrincesa;
+        this.imagen=Herramientas.cargarImagen("imagenes/Proyectil.png");
+        this.imagen = this.imagen.getScaledInstance(40, 30, Image.SCALE_SMOOTH);
         
         // direccion hacia el mouse
         double dx = (mouseX + camaraX) - xPrincesa;
@@ -31,7 +37,7 @@ public class Proyectil {
     }
     
     public void dibujar(Entorno entorno, int camaraX) {
-        entorno.dibujarCirculo(this.x - camaraX, this.y, RADIO, Color.YELLOW);
+        entorno.dibujarImagen(this.imagen, this.x - camaraX, this.y, RADIO);
     }
     
     public boolean salio(Entorno entorno, int camaraX) {

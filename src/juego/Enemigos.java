@@ -13,6 +13,14 @@ public class Enemigos {
 	private int direccion;
 	private double velocidad;
 	private Image imagen;
+	//mismo metodo de disparo del boss pero con distintos parametros
+	private double proyectilX;
+	private double proyectilY;
+	private double velProyectilX;
+	private double velProyectilY;
+	private boolean proyectilActivo;
+	private int contadorDisparo;
+	private Image imagenProyectil;
 	
 	public Enemigos(int x, int y) {
 		this.ancho = 30; //tamaño
@@ -25,6 +33,8 @@ public class Enemigos {
 		this.x = x;
 		this.imagen = Herramientas.cargarImagen("imagenes/enemigo.png");
 	    this.imagen = this.imagen.getScaledInstance(80, 70, Image.SCALE_SMOOTH);
+	    this.imagenProyectil = Herramientas.cargarImagen("imagenes/proyectilFantasma.png");
+	    this.imagenProyectil = this.imagenProyectil.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 	}
 	
 	
@@ -49,10 +59,49 @@ public class Enemigos {
 				arriba1 < abajo2 &&
 				abajo1 > arriba2;
 	}
+	private void disparar(Princesa princesa, int camaraX) {
+	    this.proyectilX = this.x;
+	    this.proyectilY = this.y;
+	    
+	    double dx = princesa.getX() - this.x;
+	    double dy = princesa.getY() - this.y;
+	    double distancia = Math.sqrt(dx * dx + dy * dy);
+	    
+	    this.velProyectilX = dx / distancia * 5;
+	    this.velProyectilY = dy / distancia * 5;
+	    this.proyectilActivo = true;
+	}
+
+	public boolean proyectilGolpea(Princesa princesa) {
+	    if (!proyectilActivo) return false;
+	    
+	    double dx = proyectilX - princesa.getX();
+	    double dy = proyectilY - princesa.getY();
+	    
+	    if (Math.sqrt(dx * dx + dy * dy) < 15) {
+	        proyectilActivo = false;
+	        return true; // en Juego esto resta 1 vida
+	    }
+	    return false;
+	}
 	
-	public void actualizar(Isla[] islas) {
-		//movimiento 
-		this.x= this.x + (this.velocidad * this.direccion);
+	public void actualizar(Isla[] islas, Princesa princesa, int camaraX) {
+	    // movimiento
+	    this.x = this.x + (this.velocidad * this.direccion);
+	    
+	    // disparo
+	    this.contadorDisparo++;
+	    if (this.contadorDisparo >= 200) {
+	        this.contadorDisparo = 0;
+	        if (!this.proyectilActivo) {
+	            disparar(princesa, camaraX);
+	        }
+	    }
+	    
+	    if (this.proyectilActivo) {
+	        this.proyectilX += this.velProyectilX;
+	        this.proyectilY += this.velProyectilY;
+	    }
 	}
 	
 
@@ -63,6 +112,10 @@ public class Enemigos {
 	        this.y,
 	        0
 	    );
+	    if (this.proyectilActivo) {
+	        entorno.dibujarImagen(this.imagenProyectil, 
+	            this.proyectilX - camaraX, this.proyectilY, 0);
+	    }
 	}
 	
 	public boolean SalioPantalla(Entorno entorno, int camaraX) {

@@ -24,13 +24,13 @@ public class Boss {
 	private int contadorDisparo;
 	
 	public Boss(int x, int y) {
-		this.ancho = 2500; 
-		this.alto = 200; 
+		this.ancho = 230; 
+		this.alto = 180; 
 		this.vida = 10;
 		this.y = y;
 		this.x = x;
 		this.imagen = Herramientas.cargarImagen("imagenes/boss.png");
-	    this.imagen = this.imagen.getScaledInstance(250, 200, Image.SCALE_SMOOTH);
+	    this.imagen = this.imagen.getScaledInstance(230, 180, Image.SCALE_SMOOTH);
 	    
 	    this.imagenProyectil = Herramientas.cargarImagen("imagenes/bola-fuego.png");
 	    this.imagenProyectil= this.imagenProyectil.getScaledInstance(40,40, Image.SCALE_SMOOTH);

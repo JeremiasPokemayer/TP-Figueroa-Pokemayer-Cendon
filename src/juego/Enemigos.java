@@ -33,7 +33,7 @@ public class Enemigos {
 		this.x = x;
 		this.imagen = Herramientas.cargarImagen("imagenes/enemigo.png");
 	    this.imagen = this.imagen.getScaledInstance(80, 70, Image.SCALE_SMOOTH);
-	    this.imagenProyectil = Herramientas.cargarImagen("imagenes/bola-fuego.png");
+	    this.imagenProyectil = Herramientas.cargarImagen("imagenes/proyectilFantasma.png");
 	    this.imagenProyectil = this.imagenProyectil.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 	}
 	

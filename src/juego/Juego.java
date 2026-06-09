@@ -463,7 +463,6 @@ public class Juego extends InterfaceJuego
 		    	
 		    	if(boss.getVida() <= 0) {
 		    		estado = GANASTE;
-		    	}
 		    }
 		}
 		
@@ -489,6 +488,7 @@ public class Juego extends InterfaceJuego
 		princesa.dibujarPrincesa(entorno, 0);
 		princesa.dibujarVidas(entorno);
 	}
+		}
 	
 	
 	//FINAL

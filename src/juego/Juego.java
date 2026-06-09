@@ -465,6 +465,7 @@ public class Juego extends InterfaceJuego
 		    		estado = GANASTE;
 		    }
 		}
+		}
 		
 		if(this.proyectil != null) {
 			if(this.proyectil.salio(entorno,0)) {
@@ -488,7 +489,7 @@ public class Juego extends InterfaceJuego
 		princesa.dibujarPrincesa(entorno, 0);
 		princesa.dibujarVidas(entorno);
 	}
-		}
+	
 	
 	
 	//FINAL

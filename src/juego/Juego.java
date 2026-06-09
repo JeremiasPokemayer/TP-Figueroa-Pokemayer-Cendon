@@ -203,7 +203,14 @@ public class Juego extends InterfaceJuego
 		//MOVIMIENTO ENEMIGOS
 		for (int i = 0; i < enemigos.length; i++) {
 			if (this.enemigos[i] != null) {
-				this.enemigos[i].actualizar(this.isla);
+				this.enemigos[i].actualizar(this.isla, this.princesa, this.camaraX);
+				
+				if (this.enemigos[i].proyectilGolpea(this.princesa)) {
+				    this.princesa.perderVida();
+				    if (!this.princesa.estaViva()) {
+				        estado = GAME_OVER;
+				    }
+				}
 				
 				if (this.enemigos[i].colisionConPrincesa(this.princesa)) {
 					this.princesa.perderVida();
